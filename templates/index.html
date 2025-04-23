@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin: 20px auto;
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<form action="/adicionar" method="POST">
+    <input type="text" name="titulo" placeholder="Título" required>
+    <input type="url" name="url" placeholder="URL" required>
+    <button type="submit">Adicionar</button>
+</form>
+    <h1>Buscador de Dados </h1>
+    <form action="/pesquisar" method="GET">
+        <input type="text" name="query" placeholder="Digite sua pesquisa..." required>
+        <button type="submit">Pesquisar</button>
+    </form>
+    <div id="results">
+        {% if resultados %}
+            {% for resultado in resultados %}
+                <div class="result">
+                    <a href="{{ resultado['url'] }}" target="_blank">{{ resultado['titulo'] }}</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            {% if query is not none %}
+                <p>Nenhum resultado encontrado para "{{ query }}".</p>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>

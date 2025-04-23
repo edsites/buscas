@@ -1,0 +1,43 @@
+from flask import Flask, render_template, jsonify
+import sqlite3
+
+app = Flask(__name__)
+
+# Rota para renderizar a página inicial
+@app.route('/')
+def index():
+    return render_template('/index.html')
+
+# Rota para fornecer dados do banco de dados
+@app.route('/dados')
+def dados():
+    conn = sqlite3.connect('dados_web.db')  # Nome do banco de dados
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT titulo, url FROM resultados')  # Busca dados da tabela
+    resultados = cursor.fetchall()
+    conn.close()
+
+    # Formatação dos dados como JSON
+    return jsonify(resultados)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+import requests
+import certifi
+
+response = requests.get(url, verify=certifi.where())
+
+@app.route('/adicionar', methods=['POST'])
+def adicionar():
+    from flask import request
+    titulo = request.form['titulo']
+    url = request.form['url']
+
+    conn = sqlite3.connect('dados_web.db')
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO resultados (titulo, url) VALUES (?, ?)', (titulo, url))
+    conn.commit()
+    conn.close()
+    return "Dados adicionados com sucesso!"

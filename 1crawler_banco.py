@@ -1,0 +1,130 @@
+import requests
+from bs4 import BeautifulSoup
+import sqlite3
+
+import requests
+from bs4 import BeautifulSoup
+import sqlite3
+
+def crawler(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    # Conectar ao banco de dados
+    conn = sqlite3.connect('1dados_web.db')
+    cursor = conn.cursor()
+
+    # Extrair dados da página
+    for link in soup.find_all('a', href=True):
+        titulo = link.get_text(strip=True)
+        url_link = link['href']
+
+        # Inserir no banco de dados, se válido
+        if titulo and url_link:
+            cursor.execute('INSERT INTO resultados (titulo, url) VALUES (?, ?)', (titulo, url_link))
+
+    # Salvar alterações e fechar
+    conn.commit()
+    conn.close()
+    print(f"Dados extraídos e armazenados de: {url}")
+
+# Exemplo de uso
+crawler("https://novosite.com")
+
+# Função para coletar dados da web
+def crawler(url):
+    response = requests.get(url, verify=False)
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    # Conexão com o banco de dados
+    conn = sqlite3.connect('1dados_web.db')
+    cursor = conn.cursor()
+
+    # Extraindo links e seus títulos
+    for link in soup.find_all('a', href=True):
+        titulo = link.get_text(strip=True)
+        url_link = link['href']
+        
+        # Armazenando no banco de dados
+        cursor.execute('INSERT INTO resultados (titulo, url) VALUES (?, ?)', (titulo, url_link))
+    
+    conn.commit()
+    conn.close()
+    print("Dados coletados e armazenados com sucesso!")
+
+# Configuração inicial
+criar_banco()
+crawler("https://exemplo.com")
+
+import sqlite3
+
+# Conectar ao banco de dados (será criado se não existir)
+conn = sqlite3.connect('1dados_web.db')
+cursor = conn.cursor()
+
+# Criar a tabela 'resultados'
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS resultados (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        titulo TEXT,
+        url TEXT
+    )
+''')
+
+# Inserir dados fictícios para teste
+cursor.execute('INSERT INTO resultados (titulo, url) VALUES (?, ?)', ('Python Official', 'https://www.python.org'))
+cursor.execute('INSERT INTO resultados (titulo, url) VALUES (?, ?)', ('Flask Documentation', 'https://flask.palletsprojects.com'))
+
+conn.commit()
+conn.close()
+
+import sqlite3
+
+# Conexão com o banco de dados
+conn = sqlite3.connect('1dados_web.db')
+cursor = conn.cursor()
+
+# Adicionar mais dados
+novos_dados = [
+    ('Título Exemplo 3', 'https://www.exemplo3.com'),
+    ('Título Exemplo 4', 'https://www.exemplo4.com'),
+]
+
+cursor.executemany('INSERT INTO resultados (titulo, url) VALUES (?, ?)', novos_dados)
+
+import requests
+from bs4 import BeautifulSoup
+import sqlite3
+
+def crawler(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    # Conectar ao banco de dados
+    conn = sqlite3.connect('dados_web.db')
+    cursor = conn.cursor()
+
+    # Extrair dados da página
+    for link in soup.find_all('a', href=True):
+        titulo = link.get_text(strip=True)
+        url_link = link['href']
+
+        # Inserir no banco de dados, se válido
+        if titulo and url_link:
+            cursor.execute('INSERT INTO resultados (titulo, url) VALUES (?, ?)', (titulo, url_link))
+
+    # Salvar alterações e fechar
+    conn.commit()
+    conn.close()
+    print(f"Dados extraídos e armazenados de: {url}")
+
+# Exemplo de uso
+crawler("https://novosite.com")
+
+# Salvar alterações e fechar conexão
+conn.commit()
+conn.close()
+
+print("Novos dados inseridos com sucesso!")
+
+print("Tabela criada e dados inseridos com sucesso!")
